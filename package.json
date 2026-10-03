@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
     "dns": "^0.2.2",
     "mongoose": "^9.10.4",
     "next": "16.2.12",
