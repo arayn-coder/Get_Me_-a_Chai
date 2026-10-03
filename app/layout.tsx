@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
-import "./globals.css"
 import Footer from "@/components/Footer";
-import SessionWrapper from "@/components/SessionWrapper"
+import SessionWrapper from "@/components/SessionWrapper";
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,7 +16,6 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-
   title: "GetMeChai",
   description: "your own chai",
   icons: {
@@ -32,18 +31,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased `}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="flex flex-col relative  bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] ">
+      <body className="min-h-screen flex flex-col relative bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]">
         <SessionWrapper>
           <Navbar />
-          <div className=" min-h-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]">
+
+          <main className="flex-1">
             {children}
-          </div>
+          </main>
+
           <Footer />
         </SessionWrapper>
-
-
       </body>
     </html>
   );
