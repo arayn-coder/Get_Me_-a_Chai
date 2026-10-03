@@ -81,7 +81,7 @@ const Dashboard = () => {
 
         getData()
 
-    }, [status, session, router])
+    }, [status, router])
 
 
     const handleChange = (e) => {

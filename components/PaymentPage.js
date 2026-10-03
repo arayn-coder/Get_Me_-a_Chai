@@ -4,7 +4,7 @@ import Script from 'next/script'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { notFound } from "next/navigation"
-import { initiate, fetchuser, fetchpayments } from '@/actions/useractions'
+import { initiate, fetchuser, fetchpayments, fetchcreator } from '@/actions/useractions'
 import { useSearchParams } from 'next/navigation'
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,6 +21,7 @@ const PaymentPage = ({ username }) => {
     })
 
     const [payments, setPayments] = useState([])
+    const [creator, setCreator] = useState(null)
     const [currentUser, setcurrentUser] = useState(null) // initially the user is null and after user fetch sucessfully than user set by email
     const { data: session } = useSession()
     const searchParams = useSearchParams()
@@ -36,10 +37,8 @@ const PaymentPage = ({ username }) => {
 
     // get the current user data usting getData function
     useEffect(() => {
-        if (session?.user?.email) {
-            getData()
-        }
-    }, [session])
+        getData()
+    }, [session, username])
 
     useEffect(() => {
         if (searchParams.get("paymentdone") == "true") {
@@ -66,26 +65,63 @@ const PaymentPage = ({ username }) => {
 
     const getData = async () => {
         try {
-            const email = session?.user?.email
 
-            if (!email) return
+            // ========================================
+            // FETCH CREATOR - ALWAYS
+            // ========================================
 
-            //fetch current user using email
-            const u = await fetchuser(email)
+            const creatorData = await fetchcreator(username)
+
+            console.log("Creator profile:", creatorData)
+
+            if (!creatorData) {
+                console.log("Creator not found:", username)
+                return
+            }
+
+            setCreator(creatorData)
+
+
+            // ========================================
+            // FETCH PAYMENTS - ALWAYS
+            // ========================================
+
             const dbpayments = await fetchpayments(username)
 
-            console.log("Fetched User:", u)
-            console.log("Fetched Payments:", dbpayments)
+            console.log("Creator payments:", dbpayments)
 
-            setcurrentUser(u)
             setPayments(dbpayments)
 
+
+            // ========================================
+            // FETCH LOGGED-IN USER - ONLY IF LOGIN
+            // ========================================
+
+            if (session?.user?.email) {
+
+                const loggedInUser = await fetchuser(
+                    session.user.email
+                )
+
+                console.log("Logged-in user:", loggedInUser)
+
+                setcurrentUser(loggedInUser)
+
+            } else {
+
+                // No login
+                setcurrentUser(null)
+
+            }
+
         } catch (error) {
-            console.error("Error fetching data:", error)
+
+            console.error("Error loading creator profile:", error)
+
         }
     }
 
-    if (!currentUser) {
+    if (!creator) {
         return (
             <div className="min-h-screen bg-[#050816] text-white flex justify-center items-center">
 
@@ -102,44 +138,81 @@ const PaymentPage = ({ username }) => {
             </div>
         )
     }
-
     const pay = async (amount) => {
-        // Get the order Id 
-        let a = await initiate(amount, username, paymentform)
-        if (!a.success) {
-            alert(a.error)
+
+        if (!creator) {
+            toast.error("Creator profile not found")
             return
         }
-        let orderId = a.id
-        var options = {
-            "key": currentUser.razorpayid, // Enter the Key ID generated from the Dashboard
-            "amount": amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-            "currency": "INR",
-            "name": "Get Me A Chai", //your business name
-            "description": "Test Transaction",
-            "image": "https://example.com/your_logo",
-            "order_id": orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-            "callback_url": `${process.env.NEXT_PUBLIC_URL}/api/razorpay`,
-            "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
-                "name": "Gaurav Kumar", //your customer's name
-                "email": "gaurav.kumar@example.com",
-                "contact": "8799574764" //Provide the customer's phone number for better conversion rates 
-            },
-            "notes": {
-                "address": "Razorpay Corporate Office"
-            },
-            "theme": {
-                "color": "#3399cc"
+
+        if (!creator.razorpayid) {
+            toast.error("This creator has not configured Razorpay")
+            return
+        }
+
+        try {
+
+            const a = await initiate(
+                amount,
+                creator.username,
+                paymentform
+            )
+
+            if (!a.success) {
+                toast.error(a.error)
+                return
             }
-        }
 
-        if (!window.Razorpay) {
-            alert("Razorpay SDK failed to load");
-            return;
-        }
+            const orderId = a.order.id
 
-        const rzp1 = new window.Razorpay(options);
-        rzp1.open();
+            const options = {
+                key: creator.razorpayid,
+
+                amount: amount,
+
+                currency: "INR",
+
+                name: "Get Me A Chai",
+
+                description: `Support @${creator.username}`,
+
+                image: creator.profilepic || undefined,
+
+                order_id: orderId,
+
+                callback_url: `${process.env.NEXT_PUBLIC_URL}/api/razorpay`,
+
+                prefill: {
+                    name: paymentform.name
+                },
+
+                notes: {
+                    creator: creator.username,
+                    message: paymentform.message
+                },
+
+                theme: {
+                    color: "#3399cc"
+                }
+            }
+
+            if (!window.Razorpay) {
+                toast.error("Razorpay SDK failed to load")
+                return
+            }
+
+            const rzp1 = new window.Razorpay(options)
+
+            rzp1.open()
+
+        } catch (error) {
+
+            console.error("Payment Error:", error)
+
+            toast.error(
+                "Something went wrong while starting payment"
+            )
+        }
     }
 
 
@@ -198,7 +271,7 @@ const PaymentPage = ({ username }) => {
 
                         <img
                             className="w-full h-full object-cover"
-                            src={currentUser.coverpic || "/default-cover.jpg"}
+                            src={creator.coverpic || "/default-cover.jpg"}
                             alt="Cover"
                         />
 
@@ -217,7 +290,7 @@ const PaymentPage = ({ username }) => {
                         <div className="p-1.5 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 shadow-2xl shadow-purple-500/30">
                             <img
                                 className="w-[120px] h-[120px] rounded-full object-cover border-0 cursor-pointer transition-all duration-300 ease-in-out hover:scale-110 hover:shadow-xl"
-                                src={currentUser.profilepic || "/default-profile.jpg"}
+                                src={creator.profilepic || "/default-profile.jpg"}
                                 alt="Profile"
                             />
                         </div>
@@ -245,7 +318,7 @@ const PaymentPage = ({ username }) => {
 
                         <h1 className="text-3xl md:text-4xl font-extrabold mt-5">
 
-                            @{currentUser.username}
+                            @{creator.username}
 
                         </h1>
 

@@ -246,22 +246,19 @@ export default function Home() {
               <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/30 via-blue-600/20 to-cyan-500/30 rounded-3xl blur-xl opacity-60 group-hover:opacity-100 transition duration-500" />
 
               {/* Video */}
+              {/* Video */}
               <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black shadow-2xl">
-
                 <div className="aspect-video">
-
-                  <iframe
-                    className="w-full h-full"
-                    src="https://www.youtube.com/embed/YkGFaQQQsvQ?si=KqE5XRi3rg_Sg2ud"
-                    title="YouTube video player"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                  ></iframe>
-
+                  <video
+                    className="h-full w-full object-cover"
+                    controls
+                    playsInline
+                    preload="metadata"
+                  >
+                    <source src="/aboutme.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
                 </div>
-
               </div>
 
             </div>
@@ -298,7 +295,7 @@ export default function Home() {
               <Link href={`/login`}>
                 <button
                   type="button"
-                  className="mt-8 px-8 py-4 rounded-xl bg-white text-black font-bold hover:scale-105 transition-all duration-300 shadow-xl"
+                  className="mt-8 px-8 cursor-pointer py-4 rounded-xl bg-white text-black font-bold hover:scale-105 transition-all duration-300 shadow-xl"
                 >
                   Start Your Journey →
                 </button>

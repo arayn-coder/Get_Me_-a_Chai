@@ -1,55 +1,34 @@
 import mongoose from "mongoose";
 
-const { Schema, model } = mongoose;
-
-const UserSchema = new Schema({
-
+const UserSchema = new mongoose.Schema(
+  {
     email: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
-
-    name: {
-        type: String
-    },
-
+    name: String,
     username: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
-
-    // Used for email/password authentication
-    password: {
-        type: String
+    password: String,
+    profilepic: String,
+    coverpic: String,
+    razorpayid: String,
+    razorpaysecret: String,
+    isCreator: {
+      type: Boolean,
+      default: false,
     },
+  },
 
-    profilepic: {
-        type: String
-    },
+  {
+    timestamps: true,
+  }
+);
 
-    coverpic: {
-        type: String
-    },
+const User =
+  mongoose.models.GetMeChaiUser ||
+  mongoose.model("GetMeChaiUser", UserSchema, "getmechai_users");
 
-    razorpayid: {
-        type: String
-    },
-
-    razorpaysecret: {
-        type: String
-    },
-
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-
-    updatedAt: {
-        type: Date,
-        default: Date.now
-    },
-
-});
-
-
-export default mongoose.models.User || model("User", UserSchema);
+export default User;

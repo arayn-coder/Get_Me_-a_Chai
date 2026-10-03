@@ -16,8 +16,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+
   title: "GetMeChai",
   description: "your own chai",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

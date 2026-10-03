@@ -118,6 +118,39 @@ export const fetchuser = async (email) => {
 
 }
 
+// ========================================
+// FETCH CREATOR BY USERNAME
+// ========================================
+
+export const fetchcreator = async (username) => {
+    try {
+        await connectDb()
+
+        const user = await User.findOne({
+            username: username
+        }).lean()
+
+        if (!user) {
+            return null
+        }
+
+        return {
+            name: user.name || "",
+            username: user.username || "",
+            email: user.email || "",
+            profilepic: user.profilepic || "",
+            coverpic: user.coverpic || "",
+            razorpayid: user.razorpayid || "",
+            razorpaysecret: user.razorpaysecret || "",
+            isCreator: user.isCreator || false
+        }
+
+    } catch (error) {
+        console.error("fetchcreator error:", error)
+        return null
+    }
+}
+
 
 // ========================================
 // FETCH PAYMENTS
@@ -158,15 +191,22 @@ export const updateProfile = async (data, oldusername) => {
 
         const ndata = Object.fromEntries(data)
 
-
         // Check username
         if (!ndata.username) {
-
             return {
                 error: "Username is required"
             }
-
         }
+
+        // Check creator profile information
+        const isCreator =
+            Boolean(ndata.name?.trim()) &&
+            Boolean(ndata.username?.trim()) &&
+            Boolean(ndata.razorpayid?.trim()) &&
+            Boolean(ndata.razorpaysecret?.trim())
+
+        // Add creator status
+        ndata.isCreator = isCreator
 
 
         // If username is changed
@@ -176,15 +216,11 @@ export const updateProfile = async (data, oldusername) => {
                 username: ndata.username
             })
 
-
             if (existingUser) {
-
                 return {
                     error: "Username already exists"
                 }
-
             }
-
 
             await User.updateOne(
                 {
@@ -195,15 +231,14 @@ export const updateProfile = async (data, oldusername) => {
                 }
             )
 
-
             // Update username in all payments
             await Payment.updateMany(
                 {
-                    to_user: oldusername
+                    to_username: oldusername
                 },
                 {
                     $set: {
-                        to_user: ndata.username
+                        to_username: ndata.username
                     }
                 }
             )
@@ -221,13 +256,9 @@ export const updateProfile = async (data, oldusername) => {
 
         }
 
-
         return {
-
             success: true,
-
             message: "Profile updated successfully"
-
         }
 
     } catch (error) {
@@ -238,16 +269,12 @@ export const updateProfile = async (data, oldusername) => {
         )
 
         return {
-
             error: "Something went wrong while updating profile"
-
         }
 
     }
 
 }
-
-
 // ========================================
 // CREATE NEW USER
 // ========================================

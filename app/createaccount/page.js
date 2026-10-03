@@ -290,7 +290,7 @@ export default function CreateAccount() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full py-3.5 rounded-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full cursor-pointer py-3.5 rounded-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                             >
 
                                 {loading

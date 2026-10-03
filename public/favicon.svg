@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="chaiGradient" x1="10" y1="8" x2="54" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A855F7"></stop>
+      <stop offset="0.5" stop-color="#D946EF"></stop>
+      <stop offset="1" stop-color="#7C3AED"></stop>
+    </linearGradient>
+
+    <linearGradient id="teaGradient" x1="18" y1="31" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FBBF24"></stop>
+      <stop offset="1" stop-color="#F97316"></stop>
+    </linearGradient>
+
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"></feGaussianBlur>
+      <feMerge>
+        <feMergeNode in="blur"></feMergeNode>
+        <feMergeNode in="SourceGraphic"></feMergeNode>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="64" height="64" rx="16" fill="#090614"></rect>
+
+  <!-- Soft glow -->
+  <circle cx="32" cy="34" r="23" fill="url(#chaiGradient)" opacity="0.12" filter="url(#glow)"></circle>
+
+  <!-- Steam -->
+  <path d="M25 23C21 19 27 16 24 12" stroke="url(#chaiGradient)" stroke-width="3" stroke-linecap="round"></path>
+
+  <path d="M34 23C30 19 36 16 33 11" stroke="url(#chaiGradient)" stroke-width="3" stroke-linecap="round"></path>
+
+  <path d="M43 23C39 19 45 16 42 13" stroke="url(#chaiGradient)" stroke-width="3" stroke-linecap="round"></path>
+
+  <!-- Cup -->
+  <path d="M15 28H46V42C46 49 41 54 30.5 54C20 54 15 49 15 42V28Z" fill="url(#chaiGradient)"></path>
+
+  <!-- Tea -->
+  <path d="M17 29H44V35H17V29Z" fill="url(#teaGradient)"></path>
+
+  <!-- Cup highlight -->
+  <path d="M20 39C21 45 24 48 30 49" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.18"></path>
+
+  <!-- Handle -->
+  <path d="M46 33H50C55 33 55 43 50 45H46" stroke="url(#chaiGradient)" stroke-width="4" stroke-linecap="round"></path>
+
+  <!-- Heart -->
+  <path d="M30.5 39.5
+       C27 35.5 21.5 40 30.5 46
+       C39.5 40 34 35.5 30.5 39.5Z" fill="white" opacity="0.95"></path>
+
+  <!-- Small sparkle -->
+  <path d="M50 15L51.2 18.8L55 20L51.2 21.2L50 25L48.8 21.2L45 20L48.8 18.8L50 15Z" fill="#F5D0FE"></path>
+</svg>

@@ -3,13 +3,24 @@ import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
+
 import connectDb from "@/db/connectDb";
 import User from "@/models/User";
+import GoogleProvider from "next-auth/providers/google";
 
 
 const handler = NextAuth({
 
+  secret: process.env.NEXTAUTH_SECRET,
+
+
   providers: [
+    //gooogle login
+
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
 
 
     // =========================
