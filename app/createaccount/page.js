@@ -20,6 +20,8 @@ export default function CreateAccount() {
     })
 
     const [loading, setLoading] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
 
     const handleChange = (e) => {
@@ -245,6 +247,7 @@ export default function CreateAccount() {
                             </div>
 
 
+
                             {/* Password */}
 
                             <div>
@@ -253,14 +256,27 @@ export default function CreateAccount() {
                                     Password
                                 </label>
 
-                                <input
-                                    name="password"
-                                    value={form.password}
-                                    onChange={handleChange}
-                                    type="password"
-                                    placeholder="Create a password"
-                                    className="w-full p-3.5 rounded-xl bg-white/[0.04] border border-white/10 outline-none focus:border-purple-500/60 text-white placeholder:text-gray-600"
-                                />
+                                <div className="relative">
+
+                                    <input
+                                        name="password"
+                                        value={form.password}
+                                        onChange={handleChange}
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder="Create a password"
+                                        className="w-full p-3.5 pr-12 rounded-xl bg-white/[0.04] border border-white/10 outline-none focus:border-purple-500/60 text-white placeholder:text-gray-600"
+                                    />
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword((prev) => !prev)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                    >
+                                        {showPassword ? "🙈" : "👁️"}
+                                    </button>
+
+                                </div>
 
                             </div>
 
@@ -273,16 +289,35 @@ export default function CreateAccount() {
                                     Confirm Password
                                 </label>
 
-                                <input
-                                    name="confirmPassword"
-                                    value={form.confirmPassword}
-                                    onChange={handleChange}
-                                    type="password"
-                                    placeholder="Confirm your password"
-                                    className="w-full p-3.5 rounded-xl bg-white/[0.04] border border-white/10 outline-none focus:border-purple-500/60 text-white placeholder:text-gray-600"
-                                />
+                                <div className="relative">
+
+                                    <input
+                                        name="confirmPassword"
+                                        value={form.confirmPassword}
+                                        onChange={handleChange}
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        placeholder="Confirm your password"
+                                        className="w-full p-3.5 pr-12 rounded-xl bg-white/[0.04] border border-white/10 outline-none focus:border-purple-500/60 text-white placeholder:text-gray-600"
+                                    />
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowConfirmPassword((prev) => !prev)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                                        aria-label={
+                                            showConfirmPassword
+                                                ? "Hide confirm password"
+                                                : "Show confirm password"
+                                        }
+                                    >
+                                        {showConfirmPassword ? "🙈" : "👁️"}
+                                    </button>
+
+                                </div>
 
                             </div>
+
+
 
 
                             {/* Button */}

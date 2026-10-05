@@ -157,31 +157,77 @@ const handler = NextAuth({
 
     async signIn({ user, account }) {
 
-      if (account.provider === "github") {
+  // Google + GitHub login
+  if (account.provider === "google" || account.provider === "github") {
 
-        await connectDb();
+    await connectDb();
 
+    if (!user.email) {
+      return false;
+    }
 
-        const currentUser = await User.findOne({
-          email: user.email,
-        });
+    // Find user by email
+    let currentUser = await User.findOne({
+      email: user.email.toLowerCase(),
+    });
 
+    // If user doesn't exist, create user
+    if (!currentUser) {
 
-        if (!currentUser) {
+      let username = user.email
+        .split("@")[0]
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
 
-          await User.create({
-            email: user.email,
-            username: user.email.split("@")[0],
-          });
+      // Make sure username is unique
+      let usernameExists = await User.findOne({
+        username: username,
+      });
 
-        }
+      if (usernameExists) {
+
+        username = `${username}${Date.now()}`;
 
       }
 
+      currentUser = await User.create({
+        email: user.email.toLowerCase(),
+        name: user.name,
+        username: username,
+        profilepic: user.image,
+      });
 
-      return true;
-    },
+      console.log("✅ New social user created:", username);
 
+    }
+
+    // Existing user but username is missing
+    if (!currentUser.username) {
+
+      let username = user.email
+        .split("@")[0]
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+
+      let usernameExists = await User.findOne({
+        username: username,
+        _id: { $ne: currentUser._id },
+      });
+
+      if (usernameExists) {
+        username = `${username}${Date.now()}`;
+      }
+
+      currentUser.username = username;
+
+      await currentUser.save();
+
+      console.log("✅ Username added:", username);
+    }
+  }
+
+  return true;
+},
 
     // =========================
     // SESSION
