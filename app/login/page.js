@@ -13,6 +13,7 @@ const Login = () => {
   const { data: session, status } = useSession()
 
   const router = useRouter()
+  const [showPassword, setShowPassword] = useState(false)
 
 
   // ==========================================
@@ -371,7 +372,7 @@ const Login = () => {
 
 
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={(e) => {
@@ -402,6 +403,14 @@ const Login = () => {
                   duration-300
                 "
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </button>
 
             </div>
 
