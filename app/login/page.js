@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react"
 import { useSession, signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { Eye, EyeOff } from "lucide-react"
 
 
 const Login = () => {
@@ -409,7 +410,11 @@ const Login = () => {
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors cursor-pointer"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                {showPassword ? "🙈" : "👁️"}
+                {showPassword ? (
+                  <EyeOff size={20} strokeWidth={1.8} />
+                ) : (
+                  <Eye size={20} strokeWidth={1.8} />
+                )}
               </button>
 
             </div>

@@ -12,6 +12,7 @@
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
     "dns": "^0.2.2",
+    "lucide-react": "^1.52.0",
     "mongoose": "^9.10.4",
     "next": "16.2.12",
     "next-auth": "^4.24.15",

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import { toast, ToastContainer, Bounce } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { createUser } from "../../actions/useractions"
+import { Eye, EyeOff } from "lucide-react"
 
 export default function CreateAccount() {
 
@@ -273,7 +274,11 @@ export default function CreateAccount() {
                                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors cursor-pointer"
                                         aria-label={showPassword ? "Hide password" : "Show password"}
                                     >
-                                        {showPassword ? "🙈" : "👁️"}
+                                        {showPassword ? (
+                                            <EyeOff size={20} strokeWidth={1.8} />
+                                        ) : (
+                                            <Eye size={20} strokeWidth={1.8} />
+                                        )}
                                     </button>
 
                                 </div>
@@ -310,7 +315,11 @@ export default function CreateAccount() {
                                                 : "Show confirm password"
                                         }
                                     >
-                                        {showConfirmPassword ? "🙈" : "👁️"}
+                                        {showConfirmPassword ? (
+                                            <EyeOff size={20} strokeWidth={1.8} />
+                                        ) : (
+                                            <Eye size={20} strokeWidth={1.8} />
+                                        )}
                                     </button>
 
                                 </div>
